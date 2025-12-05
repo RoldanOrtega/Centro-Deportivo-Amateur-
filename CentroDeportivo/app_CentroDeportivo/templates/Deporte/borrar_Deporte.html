@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Borrado de Deporte{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #e74c3c;">
+                <i class="bi bi-trash"></i> Confirmar Eliminación
+            </h2>
+            
+            <p class="lead">
+                ¿Estás seguro de que deseas eliminar el deporte 
+                <strong>{{ deporte.nombre_deporte }}</strong>?
+            </p>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Detalles Completos del Deporte</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-hash"></i> ID:</strong> {{ deporte.id_deporte }}</p>
+                            <p><strong><i class="bi bi-bicycle"></i> Nombre:</strong> {{ deporte.nombre_deporte }}</p>
+                            <p><strong><i class="bi bi-person"></i> ¿Individual?:</strong> {% if deporte.es_individual %}Sí{% else %}No{% endif %}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-people"></i> Jugadores/Equipo:</strong> {{ deporte.num_jugadores_equipo }}</p>
+                            <p><strong><i class="bi bi-grip-horizontal"></i> Superficie:</strong> {{ deporte.tipo_superficie|default:"No especificada" }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <p><strong><i class="bi bi-card-text"></i> Descripción:</strong></p>
+                    <p class="text-muted" style="white-space: pre-wrap;">{{ deporte.descripcion|default:"Sin descripción." }}</p>
+                    <hr>
+                    <p><strong><i class="bi bi-journal-text"></i> Reglas Básicas:</strong></p>
+                    <p class="text-muted" style="white-space: pre-wrap;">{{ deporte.reglas_basicas|default:"Sin reglas especificadas." }}</p>
+                </div>
+            </div>
+
+            <p class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill"></i> 
+                Advertencia: Esta acción es irreversible y no se puede deshacer.
+            </p>
+            
+            <form method="POST" action="{% url 'borrar_deporte' deporte.id_deporte %}">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_deportes' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i> Sí, eliminar permanentemente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

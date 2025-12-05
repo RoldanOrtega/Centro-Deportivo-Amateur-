@@ -1,0 +1,97 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'inicio' %}">
+            <i class="bi bi-shield-shaded"></i> Centro Deportivo
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'inicio' %}">
+                        <i class="bi bi-house-door"></i> Inicio
+                    </a>
+                </li>
+
+                <!-- Menú Deportistas -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-people-fill"></i> Deportistas
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_deportista' %}"><i class="bi bi-person-plus-fill me-2"></i>Agregar Deportista</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_deportistas' %}"><i class="bi bi-list-ul me-2"></i>Ver Deportistas</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú Deportes -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-bicycle"></i> Deportes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_deporte' %}"><i class="bi bi-plus-circle-fill me-2"></i>Agregar Deporte</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_deportes' %}"><i class="bi bi-list-ul me-2"></i>Ver Deportes</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú Equipos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-collection-fill"></i> Equipos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_equipo' %}"><i class="bi bi-plus-circle-fill me-2"></i>Agregar Equipo</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_equipos' %}"><i class="bi bi-list-ul me-2"></i>Ver Equipos</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú Partidos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-calendar-event"></i> Partidos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_partido' %}"><i class="bi bi-plus-circle-fill me-2"></i>Agregar Partido</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_partidos' %}"><i class="bi bi-list-ul me-2"></i>Ver Partidos</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú Inscripciones -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-card-checklist"></i> Inscripciones
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_inscripcion' %}"><i class="bi bi-plus-circle-fill me-2"></i>Nueva Inscripción</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_inscripciones' %}"><i class="bi bi-list-ul me-2"></i>Ver Inscripciones</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú Instalaciones -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-building"></i> Instalaciones
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_instalacion' %}"><i class="bi bi-plus-circle-fill me-2"></i>Agregar Instalación</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_instalaciones' %}"><i class="bi bi-list-ul me-2"></i>Ver Instalaciones</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú Reservas -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-calendar-plus"></i> Reservas
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'agregar_reserva' %}"><i class="bi bi-plus-circle-fill me-2"></i>Nueva Reserva</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_reservas' %}"><i class="bi bi-list-ul me-2"></i>Ver Reservas</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>

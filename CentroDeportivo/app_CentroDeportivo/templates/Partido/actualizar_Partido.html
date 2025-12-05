@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Actualizar Partido{% endblock %}
+
+{% block content %}
+<style>
+    .equipo-info-box {
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        min-height: 110px;
+        font-size: 0.9em;
+        transition: all 0.3s ease-in-out;
+    }
+    .equipo-info-box h6 {
+        color: #8e44ad;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    .equipo-info-box p {
+        margin-bottom: 3px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #2ecc71;">
+                <i class="bi bi-pencil-square"></i> Actualizar Información del Partido
+            </h2>
+            
+            <form method="POST" action="{% url 'actualizar_partido' partido.id_partido %}">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Deporte:</label>
+                        <select class="form-control" name="deporte" required id="deporte_select">
+                            <option value="">-- Seleccionar Deporte --</option>
+                            {% for deporte in deportes %}
+                                <option value="{{ deporte.id_deporte }}" {% if deporte.id_deporte == partido.deporte.id_deporte %}selected{% endif %}>
+                                    {{ deporte.nombre_deporte }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Lugar del Partido:</label>
+                        <input type="text" class="form-control" name="lugar_partido" value="{{ partido.lugar_partido }}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha del Partido:</label>
+                        <input type="date" class="form-control" name="fecha_partido" value="{{ partido.fecha_partido|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Hora del Partido:</label>
+                        <input type="time" class="form-control" name="hora_partido" value="{{ partido.hora_partido|time:'H:i' }}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Equipo Local:</label>
+                        <select class="form-control" name="equipo_local" id="equipo_local_select" required>
+                            <option value="">-- Seleccione un deporte --</option>
+                        </select>
+                        <div id="info_equipo_local" class="equipo-info-box"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Equipo Visitante:</label>
+                        <select class="form-control" name="equipo_visitante" id="equipo_visitante_select" required>
+                            <option value="">-- Seleccione un deporte --</option>
+                        </select>
+                        <div id="info_equipo_visitante" class="equipo-info-box"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Resultado Local:</label>
+                        <input type="number" class="form-control" name="resultado_local" value="{{ partido.resultado_local|default:0 }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Resultado Visitante:</label>
+                        <input type="number" class="form-control" name="resultado_visitante" value="{{ partido.resultado_visitante|default:0 }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Árbitro:</label>
+                        <input type="text" class="form-control" name="arbitro" value="{{ partido.arbitro }}">
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_partidos' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn text-white" style="background-color: #2ecc71;">
+                        <i class="bi bi-check-circle"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const equiposData = JSON.parse('{{ equipos_json|safe }}');
+    const deporteSelect = document.getElementById('deporte_select');
+    const localSelect = document.getElementById('equipo_local_select');
+    const visitanteSelect = document.getElementById('equipo_visitante_select');
+    const infoLocalDiv = document.getElementById('info_equipo_local');
+    const infoVisitanteDiv = document.getElementById('info_equipo_visitante');
+
+    const initialLocalId = "{{ partido.equipo_local.id_equipo|default:'' }}";
+    const initialVisitanteId = "{{ partido.equipo_visitante.id_equipo|default:'' }}";
+
+    function updateTeamInfo(selectedId, infoDiv) {
+        const equipo = equiposData.find(e => e.id_equipo == selectedId);
+        if (equipo) {
+            infoDiv.innerHTML = `
+                <h6>Datos del Equipo</h6>
+                <p><strong>Entrenador:</strong> ${equipo.entrenador || 'No especificado'}</p>
+                <p><strong>Capitán:</strong> ${equipo.capitan || 'No especificado'}</p>
+                <p><strong>Colores:</strong> <span class="badge" style="background-color: ${equipo.colores_equipo || '#ccc'}; color: white; padding: 5px;">${equipo.colores_equipo || 'N/A'}</span></p>
+            `;
+        } else {
+            infoDiv.innerHTML = '<h6>Datos del Equipo</h6><p class="text-muted">Seleccione un equipo para ver sus datos.</p>';
+        }
+    }
+
+    function populateTeamSelects(sportId) {
+        const filteredTeams = sportId ? equiposData.filter(e => e.deporte_id == sportId) : [];
+        
+        localSelect.innerHTML = '<option value="">-- Seleccione Equipo Local --</option>';
+        visitanteSelect.innerHTML = '<option value="">-- Seleccione Equipo Visitante --</option>';
+
+        filteredTeams.forEach(equipo => {
+            localSelect.add(new Option(equipo.nombre_equipo, equipo.id_equipo));
+            visitanteSelect.add(new Option(equipo.nombre_equipo, equipo.id_equipo));
+        });
+
+        // Restaurar selecciones previas si existen
+        if (filteredTeams.some(e => e.id_equipo == initialLocalId)) {
+            localSelect.value = initialLocalId;
+        }
+        if (filteredTeams.some(e => e.id_equipo == initialVisitanteId)) {
+            visitanteSelect.value = initialVisitanteId;
+        }
+        
+        updateTeamInfo(localSelect.value, infoLocalDiv);
+        updateTeamInfo(visitanteSelect.value, infoVisitanteDiv);
+    }
+
+    deporteSelect.addEventListener('change', function() {
+        populateTeamSelects(this.value);
+    });
+
+    localSelect.addEventListener('change', function() {
+        updateTeamInfo(this.value, infoLocalDiv);
+        if (this.value && this.value === visitanteSelect.value) {
+            visitanteSelect.value = "";
+            updateTeamInfo(null, infoVisitanteDiv);
+            alert("El equipo local y el visitante no pueden ser el mismo.");
+        }
+    });
+
+    visitanteSelect.addEventListener('change', function() {
+        updateTeamInfo(this.value, infoVisitanteDiv);
+        if (this.value && this.value === localSelect.value) {
+            localSelect.value = "";
+            updateTeamInfo(null, infoLocalDiv);
+            alert("El equipo local y el visitante no pueden ser el mismo.");
+        }
+    });
+
+    // Carga inicial
+    populateTeamSelects(deporteSelect.value);
+});
+</script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Inscripciones{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="color: #3498db;">
+        <i class="bi bi-card-checklist"></i> Lista de Inscripciones
+    </h2>
+    <a href="{% url 'agregar_inscripcion' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle-fill"></i> Nueva Inscripción
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead style="background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%); color: white;">
+            <tr>
+                <th>Deportista</th>
+                <th>Equipo</th>
+                <th>Fecha de Inscripción</th>
+                <th>Rol en el Equipo</th>
+                <th>Nº Camiseta</th>
+                <th>¿Es Titular?</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inscripcion in inscripciones %}
+            <tr>
+                <td>{{ inscripcion.deportista.nombre }} {{ inscripcion.deportista.apellido }}</td>
+                <td>{{ inscripcion.equipo.nombre_equipo }}</td>
+                <td>{{ inscripcion.fecha_inscripcion|date:"d/m/Y" }}</td>
+                <td>{{ inscripcion.rol_en_equipo|default:"--" }}</td>
+                <td>{{ inscripcion.num_camiseta|default:"--" }}</td>
+                <td>
+                    {% if inscripcion.es_titular %}
+                        <span class="badge bg-success">Sí</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'actualizar_inscripcion' inscripcion.id_inscripcion %}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="{% url 'borrar_inscripcion' inscripcion.id_inscripcion %}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> No hay inscripciones registradas.
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

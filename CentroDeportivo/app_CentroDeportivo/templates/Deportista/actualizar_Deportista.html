@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Actualizar Deportista{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #3498db;">
+                <i class="bi bi-pencil-square"></i> Actualizar Deportista
+            </h2>
+            
+            <form method="POST" action="{% url 'actualizar_deportista' deportista.id_deportista %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" name="nombre" value="{{ deportista.nombre }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Apellido:</label>
+                            <input type="text" class="form-control" name="apellido" value="{{ deportista.apellido }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Nacimiento:</label>
+                            <input type="date" class="form-control" name="fecha_nacimiento" value="{{ deportista.fecha_nacimiento|date:'Y-m-d' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Género:</label>
+                            <select class="form-select" name="genero">
+                                <option value="Masculino" {% if deportista.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
+                                <option value="Femenino" {% if deportista.genero == 'Femenino' %}selected{% endif %}>Femenino</option>
+                                <option value="Otro" {% if deportista.genero == 'Otro' %}selected{% endif %}>Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Email:</label>
+                            <input type="email" class="form-control" name="email" value="{{ deportista.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono:</label>
+                            <input type="tel" class="form-control" name="telefono" value="{{ deportista.telefono }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nivel de Habilidad:</label>
+                            <select class="form-select" name="nivel_habilidad">
+                                <option value="Principiante" {% if deportista.nivel_habilidad == 'Principiante' %}selected{% endif %}>Principiante</option>
+                                <option value="Intermedio" {% if deportista.nivel_habilidad == 'Intermedio' %}selected{% endif %}>Intermedio</option>
+                                <option value="Avanzado" {% if deportista.nivel_habilidad == 'Avanzado' %}selected{% endif %}>Avanzado</option>
+                                <option value="Profesional" {% if deportista.nivel_habilidad == 'Profesional' %}selected{% endif %}>Profesional</option>
+                            </select>
+                        </div>
+                         <div class="mb-3">
+                            <label for="deporte_principal" class="form-label">Deporte Principal:</label>
+                            <select id="deporte_principal" name="deporte_principal" class="form-select" required>
+                                <option value="">Seleccione un deporte</option>
+                                {% for deporte in deportes %}
+                                    <option value="{{ deporte.id_deporte }}" {% if deporte.nombre_deporte == deportista.deporte_principal %}selected{% endif %}>
+                                        {{ deporte.nombre_deporte }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div id="deporte-details" class="card" style="display: none;">
+                            <div class="card-header" style="background-color: #eaf5ff; color: #3498db;">
+                                <strong>Detalles del Deporte</strong>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Descripción:</strong> <span id="deporte-descripcion"></span></p>
+                                <p><strong>Reglas:</strong> <span id="deporte-reglas"></span></p>
+                                <p><strong>Jugadores por equipo:</strong> <span id="deporte-jugadores"></span></p>
+                                <p><strong>Tipo:</strong> <span id="deporte-tipo"></span></p>
+                                <p><strong>Superficie:</strong> <span id="deporte-superficie"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <label class="form-label">Lesiones Previas (opcional):</label>
+                    <textarea class="form-control" name="lesiones_previas" rows="2">{{ deportista.lesiones_previas }}</textarea>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none;">
+                        <i class="bi bi-check-lg"></i> Actualizar
+                    </button>
+                    <a href="{% url 'ver_deportistas' %}" class="btn btn-secondary ms-2">
+                        <i class="bi bi-x-lg"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Datos de deportes pasados desde la vista
+    const deportesData = JSON.parse('{{ deportes_data|escapejs }}');
+    const deporteSelect = document.getElementById('deporte_principal');
+    const deporteDetails = document.getElementById('deporte-details');
+
+    function updateDeporteDetails() {
+        const selectedId = deporteSelect.value;
+        if (!selectedId) {
+            deporteDetails.style.display = 'none';
+            return;
+        }
+
+        const selectedDeporte = deportesData.find(d => d.id_deporte == selectedId);
+        
+        if (selectedDeporte) {
+            document.getElementById('deporte-descripcion').textContent = selectedDeporte.descripcion;
+            document.getElementById('deporte-reglas').textContent = selectedDeporte.reglas_basicas;
+            document.getElementById('deporte-jugadores').textContent = selectedDeporte.num_jugadores_equipo;
+            document.getElementById('deporte-tipo').textContent = selectedDeporte.es_individual ? 'Individual' : 'Equipo';
+            document.getElementById('deporte-superficie').textContent = selectedDeporte.tipo_superficie;
+            deporteDetails.style.display = 'block';
+        } else {
+            deporteDetails.style.display = 'none';
+        }
+    }
+
+    // Llama a la función cuando cambia la selección
+    deporteSelect.addEventListener('change', updateDeporteDetails);
+
+    // Llama a la función al cargar la página para mostrar los detalles del deporte actual
+    document.addEventListener('DOMContentLoaded', updateDeporteDetails);
+</script>
+{% endblock %}

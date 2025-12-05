@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Agregar Instalación Deportiva{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #3498db;">
+                <i class="bi bi-building-add"></i> Agregar Nueva Instalación
+            </h2>
+            
+            <form method="POST" action="{% url 'agregar_instalacion' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" name="nombre_instalacion" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo:</label>
+                            <select class="form-control" name="tipo_instalacion" required>
+                                <option value="Cancha">Cancha</option>
+                                <option value="Gimnasio">Gimnasio</option>
+                                <option value="Piscina">Piscina</option>
+                                <option value="Pista">Pista</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Ubicación:</label>
+                    <input type="text" class="form-control" name="ubicacion">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Capacidad (Personas):</label>
+                            <input type="number" class="form-control" name="capacidad_personas" min="0" value="0">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="mb-3">
+                            <label class="form-label">Costo de Alquiler por Hora:</label>
+                            <input type="number" step="0.01" class="form-control" name="costo_alquiler_hora" min="0" value="0.00" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Horario Disponible:</label>
+                    <input type="text" class="form-control" name="horario_disponible" placeholder="Ej: Lunes a Viernes, 9am - 10pm">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Descripción del Equipamiento:</label>
+                    <textarea class="form-control" name="descripcion_equipamiento" rows="3"></textarea>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="es_techada">
+                    <label class="form-check-label">Es Techada</label>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'ver_instalaciones' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Guardar Instalación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

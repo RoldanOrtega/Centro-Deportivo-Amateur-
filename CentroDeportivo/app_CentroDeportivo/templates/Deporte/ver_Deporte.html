@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Deportes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="color: #27ae60;">
+        <i class="bi bi-bicycle"></i> Lista de Deportes
+    </h2>
+    <a href="{% url 'agregar_deporte' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Nuevo Deporte
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead style="background: linear-gradient(135deg, #27ae60 0%, #2c3e50 100%); color: white;">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>¿Individual?</th>
+                <th>Jugadores/Eq.</th>
+                <th>Superficie</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deporte in deportes %}
+            <tr>
+                <td>{{ deporte.id_deporte }}</td>
+                <td><strong>{{ deporte.nombre_deporte }}</strong></td>
+                <td>{{ deporte.descripcion|truncatewords:10|default:"N/A" }}</td>
+                <td>
+                    {% if deporte.es_individual %}
+                        <span class="badge bg-primary">Sí</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                </td>
+                <td>{{ deporte.num_jugadores_equipo }}</td>
+                <td>{{ deporte.tipo_superficie|default:"N/A" }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'actualizar_deporte' deporte.id_deporte %}" 
+                           class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="{% url 'borrar_deporte' deporte.id_deporte %}" 
+                           class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> No hay deportes registrados.
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

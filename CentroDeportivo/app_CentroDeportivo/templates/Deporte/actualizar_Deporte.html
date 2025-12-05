@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Actualizar Deporte{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #f39c12;">
+                <i class="bi bi-pencil-square"></i> Actualizar Deporte
+            </h2>
+            
+            <form method="POST" action="{% url 'actualizar_deporte' deporte.id_deporte %}">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nombre del Deporte:</label>
+                        <input type="text" class="form-control" name="nombre_deporte" value="{{ deporte.nombre_deporte }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nº Jugadores por Equipo:</label>
+                        <input type="number" class="form-control" name="num_jugadores_equipo" value="{{ deporte.num_jugadores_equipo }}" min="1" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tipo de Superficie:</label>
+                        <input type="text" class="form-control" name="tipo_superficie" value="{{ deporte.tipo_superficie }}">
+                    </div>
+                    <div class="col-md-6 mb-3 d-flex align-items-center">
+                        <div class="form-check form-switch mt-4">
+                            <input class="form-check-input" type="checkbox" name="es_individual" id="es_individual_switch" {% if deporte.es_individual %}checked{% endif %}>
+                            <label class="form-check-label" for="es_individual_switch">¿Es un deporte individual?</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Descripción:</label>
+                    <textarea class="form-control" name="descripcion" rows="3">{{ deporte.descripcion }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Reglas Básicas:</label>
+                    <textarea class="form-control" name="reglas_basicas" rows="4">{{ deporte.reglas_basicas }}</textarea>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_deportes' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-circle"></i> Actualizar Deporte
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

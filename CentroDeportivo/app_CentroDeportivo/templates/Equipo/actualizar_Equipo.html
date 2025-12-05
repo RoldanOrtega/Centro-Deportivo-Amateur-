@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Actualizar Equipo{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #f39c12;">
+                <i class="bi bi-pencil-square"></i> Actualizar Equipo
+            </h2>
+            
+            <form method="POST" action="{% url 'actualizar_equipo' equipo.id_equipo %}">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nombre del Equipo:</label>
+                        <input type="text" class="form-control" name="nombre_equipo" value="{{ equipo.nombre_equipo }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Deporte Asociado:</label>
+                        <select class="form-control" name="deporte" required>
+                            <option value="">-- Seleccionar Deporte --</option>
+                            {% for deporte in deportes %}
+                                <option value="{{ deporte.id_deporte }}" {% if deporte.id_deporte == equipo.deporte.id_deporte %}selected{% endif %}>
+                                    {{ deporte.nombre_deporte }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha de Fundación:</label>
+                        <input type="date" class="form-control" name="fecha_fundacion" value="{{ equipo.fecha_fundacion|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Categoría de Edad:</label>
+                        <input type="text" class="form-control" name="categoria_edad" value="{{ equipo.categoria_edad }}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Entrenador:</label>
+                        <input type="text" class="form-control" name="entrenador" value="{{ equipo.entrenador }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Capitán:</label>
+                        <input type="text" class="form-control" name="capitan" value="{{ equipo.capitan }}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Colores del Equipo:</label>
+                        <input type="text" class="form-control" name="colores_equipo" value="{{ equipo.colores_equipo }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nº Jugadores Actual:</label>
+                        <input type="number" class="form-control" name="num_jugadores_actual" value="{{ equipo.num_jugadores_actual }}" min="0">
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_equipos' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-circle"></i> Actualizar Equipo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

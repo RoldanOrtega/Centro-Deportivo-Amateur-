@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación de Instalación{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #e74c3c;">
+                <i class="bi bi-trash"></i> Confirmar Eliminación
+            </h2>
+            
+            <p class="lead">
+                ¿Estás seguro de que deseas eliminar la instalación 
+                <strong>{{ instalacion.nombre }}</strong>?
+            </p>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Detalles de la Instalación</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-building"></i> Nombre:</strong> {{ instalacion.nombre }}</p>
+                            <p><strong><i class="bi bi-tag"></i> Tipo:</strong> {{ instalacion.tipo }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-geo-alt"></i> Ubicación:</strong> {{ instalacion.ubicacion|default:"No especificada" }}</p>
+                            <p><strong><i class="bi bi-people"></i> Capacidad:</strong> {{ instalacion.capacidad }}</p>
+                            <p><strong><i class="bi bi-check-circle-fill"></i> Disponibilidad:</strong> {{ instalacion.disponibilidad }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill"></i> 
+                Advertencia: Esta acción es irreversible. Si eliminas la instalación, también se eliminarán todas las reservas asociadas.
+            </p>
+            
+            <form method="POST" action="{% url 'borrar_instalacion' instalacion.id_instalacion %}">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_instalaciones' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i> Sí, eliminar permanentemente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

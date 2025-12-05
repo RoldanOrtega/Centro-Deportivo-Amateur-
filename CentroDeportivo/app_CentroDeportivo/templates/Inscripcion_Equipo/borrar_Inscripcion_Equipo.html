@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación de Inscripción{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #e74c3c;">
+                <i class="bi bi-trash"></i> Confirmar Eliminación
+            </h2>
+            
+            <p class="lead">
+                ¿Estás seguro de que deseas eliminar la inscripción de 
+                <strong>{{ inscripcion.id_deportista.nombre }} {{ inscripcion.id_deportista.apellido }}</strong>
+                en el equipo <strong>{{ inscripcion.id_equipo.nombre_equipo }}</strong>?
+            </p>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Detalles de la Inscripción</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-person-badge"></i> Deportista:</strong> {{ inscripcion.id_deportista.nombre }} {{ inscripcion.id_deportista.apellido }}</p>
+                            <p><strong><i class="bi bi-collection-fill"></i> Equipo:</strong> {{ inscripcion.id_equipo.nombre_equipo }}</p>
+                            <p><strong><i class="bi bi-calendar-event"></i> Fecha de Inscripción:</strong> {{ inscripcion.fecha_inscripcion|date:"d/m/Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-person-workspace"></i> Rol en el Equipo:</strong> {{ inscripcion.rol_en_equipo|default:"No especificado" }}</p>
+                            <p><strong><i class="bi bi-hash"></i> N.º de Camiseta:</strong> {{ inscripcion.num_camiseta|default:"N/A" }}</p>
+                            <p><strong><i class="bi bi-star-fill"></i> Es Titular:</strong> {% if inscripcion.es_titular %}Sí{% else %}No{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill"></i> 
+                Advertencia: Esta acción es irreversible y la inscripción se eliminará permanentemente.
+            </p>
+            
+            <form method="POST" action="{% url 'borrar_inscripcion' inscripcion.id_inscripcion %}">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_inscripciones' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i> Sí, eliminar permanentemente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

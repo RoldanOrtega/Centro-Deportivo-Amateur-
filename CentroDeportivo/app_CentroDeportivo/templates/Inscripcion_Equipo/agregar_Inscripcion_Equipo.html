@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Agregar Inscripción{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #3498db;">
+                <i class="bi bi-card-checklist"></i> Agregar Nueva Inscripción
+            </h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="deportista" class="form-label">Deportista:</label>
+                            <select name="deportista" id="id_deportista" class="form-control" required>
+                                <option value="" disabled selected>Selecciona un deportista</option>
+                                {% for deportista in deportistas %}
+                                    <option value="{{ deportista.id_deportista }}">{{ deportista.nombre }} {{ deportista.apellido }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="equipo" class="form-label">Equipo:</label>
+                            <select name="equipo" id="id_equipo" class="form-control" required>
+                                <option value="" disabled selected>Selecciona un equipo</option>
+                                {% for equipo in equipos %}
+                                    <option value="{{ equipo.id_equipo }}">{{ equipo.nombre_equipo }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            <!-- Info boxes -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div id="info_deportista" class="p-3 border rounded bg-light" style="min-height: 140px;">
+                        <h6><i class="bi bi-person-fill"></i> Info del Deportista</h6>
+                        <p class="text-muted small">Seleccione un deportista para ver sus datos.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="info_equipo" class="p-3 border rounded bg-light" style="min-height: 140px;">
+                        <h6><i class="bi bi-shield-fill"></i> Info del Equipo</h6>
+                        <p class="text-muted small">Seleccione un equipo para ver sus datos.</p>
+                    </div>
+                </div>
+            </div>
+                <!-- Info cards -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div id="deportista-info-card" class="card bg-light" style="display: none;">
+                            <div class="card-body">
+                                <h5 class="card-title mb-2"><i class="bi bi-person-fill"></i> Info del Deportista</h5>
+                                <p class="card-text mb-1"><strong>Deporte Principal:</strong> <span id="deportista-deporte"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="equipo-info-card" class="card bg-light" style="display: none;">
+                            <div class="card-body">
+                                <h5 class="card-title mb-2"><i class="bi bi-shield-fill"></i> Info del Equipo</h5>
+                                <p class="card-text mb-1"><strong>Deporte:</strong> <span id="equipo-deporte"></span></p>
+                                <p class="card-text mb-1"><strong>Entrenador:</strong> <span id="equipo-entrenador"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="fecha_inscripcion" class="form-label">Fecha de Inscripción:</label>
+                            <input type="date" name="fecha_inscripcion" id="fecha_inscripcion" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="rol_en_equipo" class="form-label">Rol en el Equipo:</label>
+                            <input type="text" name="rol_en_equipo" id="rol_en_equipo" class="form-control" placeholder="Ej: Delantero, Defensa">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="num_camiseta" class="form-label">Número de Camiseta:</label>
+                            <input type="number" name="num_camiseta" id="num_camiseta" class="form-control" min="0">
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="form-check mt-3">
+                            <input type="checkbox" name="es_titular" id="es_titular" class="form-check-input">
+                            <label class="form-check-label" for="es_titular">¿Es Titular?</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'ver_inscripciones' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Guardar Inscripción
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ deportistas_data|json_script:"deportistas-data" }}
+{{ equipos_data|json_script:"equipos-data" }}
+{{ deportes_data|json_script:"deportes-data" }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cargar datos JSON
+        const deportistasData = JSON.parse(document.getElementById('deportistas-data').textContent || '[]');
+        const equiposData = JSON.parse(document.getElementById('equipos-data').textContent || '[]');
+        const deportesData = JSON.parse(document.getElementById('deportes-data').textContent || '[]');
+    
+        // Elementos del DOM
+        const deportistaSelect = document.getElementById('id_deportista');
+        const equipoSelect = document.getElementById('id_equipo');
+        const infoDeportistaDiv = document.getElementById('info_deportista');
+        const infoEquipoDiv = document.getElementById('info_equipo');
+    
+        // Crear mapas usando strings para las claves
+        const deportesMap = new Map(deportesData.map(d => [String(d.pk), d.nombre_deporte]));
+        const deportistasMap = new Map(deportistasData.map(d => [String(d.id_deportista), d]));
+        const equiposMap = new Map(equiposData.map(e => [String(e.id_equipo), e]));
+    
+        function updateDeportistaInfo() {
+            const selectedId = deportistaSelect.value;
+            const deportista = deportistasMap.get(selectedId);
+            
+            if (deportista) {
+                infoDeportistaDiv.innerHTML = `
+                    <h6><i class="bi bi-person-fill"></i> Info del Deportista</h6>
+                    <p class="mb-1"><strong>Nombre:</strong> ${deportista.nombre} ${deportista.apellido}</p>
+                    <p class="mb-1"><strong>Email:</strong> ${deportista.email || 'No especificado'}</p>
+                    <p class="mb-1"><strong>Deporte:</strong> ${deportista.deporte_principal || 'No especificado'}</p>
+                    <p class="mb-0"><strong>Nivel:</strong> ${deportista.nivel_habilidad || 'No especificado'}</p>
+                `;
+            } else {
+                infoDeportistaDiv.innerHTML = `
+                    <h6><i class="bi bi-person-fill"></i> Info del Deportista</h6>
+                    <p class="text-muted small">Seleccione un deportista para ver sus datos.</p>
+                `;
+            }
+        }
+    
+        function updateEquipoInfo() {
+            const selectedId = equipoSelect.value;
+            const equipo = equiposMap.get(selectedId);
+            
+            if (equipo) {
+                const deporteNombre = deportesMap.get(String(equipo.deporte_id)) || 'No especificado';
+                infoEquipoDiv.innerHTML = `
+                    <h6><i class="bi bi-shield-fill"></i> Info del Equipo</h6>
+                    <p class="mb-1"><strong>Deporte:</strong> ${deporteNombre}</p>
+                    <p class="mb-1"><strong>Entrenador:</strong> ${equipo.entrenador || 'No especificado'}</p>
+                    <p class="mb-1"><strong>Categoría:</strong> ${equipo.categoria_edad || 'No especificada'}</p>
+                    <p class="mb-0"><strong>Jugadores:</strong> ${equipo.num_jugadores_actual || 'N/A'}</p>
+                `;
+            } else {
+                infoEquipoDiv.innerHTML = `
+                    <h6><i class="bi bi-shield-fill"></i> Info del Equipo</h6>
+                    <p class="text-muted small">Seleccione un equipo para ver sus datos.</p>
+                `;
+            }
+        }
+    
+        // Añadir eventos a los 'select'
+        deportistaSelect.addEventListener('change', updateDeportistaInfo);
+        equipoSelect.addEventListener('change', updateEquipoInfo);
+    });
+    </script>
+{% endblock %}

@@ -1,2 +1,7 @@
-.venv
-__pycache__
+# Base de datos
+db.sqlite3
+
+# Archivos de entorno de Python
+.venv/
+__pycache__/
+*.pyc

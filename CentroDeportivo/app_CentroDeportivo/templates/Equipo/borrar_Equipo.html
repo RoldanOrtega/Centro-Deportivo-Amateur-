@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Borrado de Equipo{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="form-container">
+            <h2 class="mb-4" style="color: #e74c3c;">
+                <i class="bi bi-trash"></i> Confirmar Eliminación
+            </h2>
+            
+            <p class="lead">
+                ¿Estás seguro de que deseas eliminar al equipo 
+                <strong>{{ equipo.nombre_equipo }}</strong>?
+            </p>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Detalles Completos del Equipo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-hash"></i> ID:</strong> {{ equipo.id_equipo }}</p>
+                            <p><strong><i class="bi bi-people-fill"></i> Nombre:</strong> {{ equipo.nombre_equipo }}</p>
+                            <p><strong><i class="bi bi-bicycle"></i> Deporte:</strong> {{ equipo.id_deporte.nombre_deporte }}</p>
+                            <p><strong><i class="bi bi-calendar-event"></i> Fundación:</strong> {{ equipo.fecha_fundacion|date:"d/m/Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="bi bi-person-video3"></i> Entrenador:</strong> {{ equipo.entrenador|default:"N/A" }}</p>
+                            <p><strong><i class="bi bi-person-check"></i> Capitán:</strong> {{ equipo.capitan|default:"N/A" }}</p>
+                            <p><strong><i class="bi bi-palette-fill"></i> Colores:</strong> {{ equipo.colores_equipo|default:"N/A" }}</p>
+                            <p><strong><i class="bi bi-people"></i> Jugadores:</strong> {{ equipo.num_jugadores_actual }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill"></i> 
+                Advertencia: Esta acción es irreversible. Eliminar un equipo también puede afectar a los partidos y a las inscripciones asociadas.
+            </p>
+            
+            <form method="POST" action="{% url 'borrar_equipo' equipo.id_equipo %}">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'ver_equipos' %}" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i> Sí, eliminar permanentemente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Ver Partidos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0" style="color: #343a40;"><i class="bi bi-calendar-event"></i> Listado de Partidos</h1>
+    <a href="{% url 'agregar_partido' %}" class="btn text-white" style="background-color: #2ecc71;">
+        <i class="bi bi-plus-circle-fill"></i> Registrar Nuevo Partido
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Fecha y Hora</th>
+                        <th scope="col">Deporte</th>
+                        <th scope="col">Equipo Local</th>
+                        <th scope="col">Equipo Visitante</th>
+                        <th scope="col">Resultado</th>
+                        <th scope="col">Lugar del Partido</th>
+                        <th scope="col" class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for partido in partidos %}
+                    <tr>
+                        <td>{{ partido.fecha_partido|date:"d/m/Y" }} - {{ partido.hora_partido|time:"H:i" }}</td>
+                        <td>{{ partido.deporte.nombre_deporte|default:"No especificado" }}</td>
+                        <td>
+                            {% if partido.equipo_local %}
+                                {% with color_local=partido.equipo_local.colores_equipo|default:"#ccc" %}
+                                    <span class="badge" style="background-color: {{ color_local }};"></span>
+                                    {{ partido.equipo_local.nombre_equipo }}
+                                {% endwith %}
+                            {% else %}
+                                Equipo no definido
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if partido.equipo_visitante %}
+                                {% with color_visitante=partido.equipo_visitante.colores_equipo|default:"#ccc" %}
+                                    <span class="badge" style="background-color: {{ color_visitante }};"></span>
+                                    {{ partido.equipo_visitante.nombre_equipo }}
+                                {% endwith %}
+                            {% else %}
+                                Equipo no definido
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ partido.resultado_local|default:"0" }} - {{ partido.resultado_visitante|default:"0" }}</strong></td>
+                        <td><i class="bi bi-geo-alt-fill"></i> {{ partido.lugar_partido|default:"No especificado" }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'actualizar_partido' partido.id_partido %}" class="btn btn-sm btn-warning me-1" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="{% url 'borrar_partido' partido.id_partido %}" class="btn btn-sm btn-danger" title="Eliminar">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle-fill me-2"></i> No hay partidos registrados todavía.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
